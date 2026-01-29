@@ -20,7 +20,7 @@ export default function SiteLinks() {
         { label: "inventory", href: "/inventory" }
     ]
     return (
-        <ul className='p-5'>
+        <ul>
             {links.map((link, index) => (
                 <li key={index}>
                     <Link

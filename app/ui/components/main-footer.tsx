@@ -1,15 +1,25 @@
+import Link from "next/link";
+
+const footerLinks = [
+    { href: "/products", label: "Browse" },
+    { href: "/seller", label: "Sell" },
+    { href: "/profiles", label: "Discover" },
+];
+
 export default function MainFooter() {
     return (
-        <div className="bg-gray-900 text-white px-15 py-10 flex justify-between">
-            <div>Site name</div>
-            <nav className="flex gap-5">
-                <ul className="flex gap-10">
-                    <li>Page</li>
-                    <li>Page</li>
-                    <li>Page</li>
-                </ul>
-                <button>Button</button>
-            </nav>
-        </div>
+        <footer className="border-t border-gray-200">
+            <div className="mx-5 md:mx-10 max-w-5xl lg:mx-auto mt-7 mb-7">
+                <nav className="flex flex-col md:flex-row gap-4 justify-between mb-3">
+                    <Link href="//privacy-policy">Privacy Policy</Link>
+                    <ul className="flex gap-10">
+                        {footerLinks.map((link, item) => (
+                            <Link key={item} href={link.href}>{link.label}</Link>
+                        ))}
+                    </ul>
+                </nav>
+                <p className="text-sm text-gray-400">&copy; 2026 Handcrafted Haven. All rights reserved.</p>
+            </div>
+        </footer>
     )
 }
