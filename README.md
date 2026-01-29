@@ -34,3 +34,9 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+<img width="1319" height="741" alt="Screenshot 2026-01-29 at 19 47 51" src="https://github.com/user-attachments/assets/58321c02-93b1-45c8-a70c-eacf74a7a111" />
+
+
+Week 04 -
+This week, I worked on improving the application layout by implementing a persistent navbar and footer using Next.js layouts. I also added global CSS styles to ensure responsive design, accessibility, and proper footer positioning across all pages.
