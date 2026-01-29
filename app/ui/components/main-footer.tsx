@@ -11,7 +11,7 @@ export default function MainFooter() {
         <footer className="border-t border-gray-200">
             <div className="mx-5 md:mx-10 max-w-5xl lg:mx-auto mt-7 mb-7">
                 <nav className="flex flex-col md:flex-row gap-4 justify-between mb-3">
-                    <Link href="//privacy-policy">Privacy Policy</Link>
+                    <Link href="/privacy-policy">Privacy Policy</Link>
                     <ul className="flex gap-10">
                         {footerLinks.map((link, item) => (
                             <Link key={item} href={link.href}>{link.label}</Link>
