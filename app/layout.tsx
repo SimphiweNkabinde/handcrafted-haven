@@ -1,4 +1,5 @@
 import "./globals.css";
+import { Roboto } from "next/font/google";
 import MainHeader from "./ui/components/main-header";
 import MainFooter from "./ui/components/main-footer";
 import { Metadata } from "next";
@@ -14,10 +15,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body>
         <MainHeader />
-        <main className="mx-5 md:mx-10 max-w-5xl lg:mx-auto w-full my-10">
+
+        <main className="w-full max-w-5xl mx-auto px-5 md:px-10 my-10">
           {children}
         </main>
         <MainFooter />
