@@ -10,7 +10,7 @@ const navItems = [
 
 export default function MainHeader() {
     return (
-        <header className="border-b-1 border-gray-200">
+        <header >
             <div className="mx-5 md:mx-10 max-w-5xl lg:mx-auto my-5 flex justify-between items-center">
                 <Link href="/" className="font-bold text-xl">
                     Handcraft Haven
