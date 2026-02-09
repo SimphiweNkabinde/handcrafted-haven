@@ -85,7 +85,7 @@ export default function EditForm({ product, categories }: { categories: ProductC
                             <FieldErrorMessage errorId="category-error" errors={state.errors?.categoryId} />
                         </div>
                     </div>
-                    <FieldErrorMessage errorId="category-error" errors={state.message} />
+                    <FieldErrorMessage errorId="category-error" errors={state.message || ""} />
                 </div>
             </div>
             <div className="flex gap-5 ms-auto">

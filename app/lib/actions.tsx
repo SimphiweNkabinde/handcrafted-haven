@@ -56,12 +56,12 @@ export async function createProduct(prevState: ProductState, formData: FormData)
             errors: validatedFields.error.flatten().fieldErrors,
             message: 'Missing Fields. Failed to Create Product.',
             values: {
-                name: formData.get('name') || "",
-                shortDescription: formData.get('shortDescription') || "",
-                longDescription: formData.get('longDescription') || "",
-                price: formData.get('price') || "",
-                imageUrl: formData.get('imageUrl') || "",
-                categoryId: formData.get('categoryId') || ""
+                name: formData.get('name')?.toString(),
+                shortDescription: formData.get('shortDescription')?.toString(),
+                longDescription: formData.get('longDescription')?.toString(),
+                price: formData.get('price')?.toString(),
+                imageUrl: formData.get('imageUrl')?.toString(),
+                categoryId: formData.get('categoryId')?.toString()
             }
         }
     }
@@ -98,12 +98,12 @@ export async function updateProduct(id: string, prevState: ProductState, formDat
             errors: validatedFields.error.flatten().fieldErrors,
             message: 'Missing Fields. Failed to Create Product.',
             values: {
-                name: formData.get('name') || "",
-                shortDescription: formData.get('shortDescription') || "",
-                longDescription: formData.get('longDescription') || "",
-                price: formData.get('price') || "",
-                imageUrl: formData.get('imageUrl') || "",
-                categoryId: formData.get('categoryId') || ""
+                name: formData.get('name')?.toString(),
+                shortDescription: formData.get('shortDescription')?.toString(),
+                longDescription: formData.get('longDescription')?.toString(),
+                price: formData.get('price')?.toString(),
+                imageUrl: formData.get('imageUrl')?.toString(),
+                categoryId: formData.get('categoryId')?.toString()
             }
         }
     }
