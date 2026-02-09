@@ -1,9 +1,10 @@
-import SiteLinks from "@/app/ui/components/site-links";
+import { fetchProductCategories } from "@/app/lib/data";
+import CreateForm from "@/app/ui/products/create-form";
 
-export default function Page() {
+export default async function page({ params }: PageProps<"/products/create">) {
+
+    const categories = await fetchProductCategories()
     return (
-        <div>
-            <SiteLinks />
-        </div>
+        <CreateForm categories={categories} />
     )
 }
