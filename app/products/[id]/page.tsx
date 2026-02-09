@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default async function page({ params }: PageProps<"/products/[id]">) {
     const { id } = await params;
-    const product = await fetchProductById(id);
+    const product = await fetchProductById(id).catch(err => { return null });
 
     if (!product) notFound();
 
