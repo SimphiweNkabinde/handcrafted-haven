@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Button from "../button";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 
 const navItems = [
