@@ -5,10 +5,12 @@ import Image from "next/image";
 import { fetchProductById } from "@/app/lib/data";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { auth } from "@/auth";
 
 export default async function page({ params }: PageProps<"/products/[id]">) {
     const { id } = await params;
     const product = await fetchProductById(id).catch(err => { return null });
+    const session = await auth()
 
     if (!product) notFound();
 
@@ -19,7 +21,9 @@ export default async function page({ params }: PageProps<"/products/[id]">) {
                 <div className="flex flex-col gap-3 sm:gap-4 md:flex-1">
                     <div className="flex items-start justify-between">
                         <h1 className="text-2xl font-semibold">{product.name}</h1>
-                        <Link className="rounded-lg px-4 py-1.5 text-sm cursor-pointer bg-gray-50 border border-gray-200 hover:bg-gray-100" href={`/products/${id}/edit`}>Edit</Link>
+                        {session?.user &&
+                            <Link className="rounded-lg px-4 py-1.5 text-sm cursor-pointer bg-gray-50 border border-gray-200 hover:bg-gray-100" href={`/products/${id}/edit`}>Edit</Link>
+                        }
                     </div>
                     <p className="text-gray-400 text-sm">{product.category_name}</p>
 

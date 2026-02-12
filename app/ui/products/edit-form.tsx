@@ -6,7 +6,7 @@ import TextInput from "./text-input";
 import Textarea from "./textarea";
 import Button from "./button";
 import { useActionState, useState } from "react";
-import { createProduct, ProductState, updateProduct } from "@/app/lib/actions";
+import { createProduct, ProductState, updateProduct } from "@/app/lib/actions/product-actions";
 import { Product, ProductCategory } from "@/app/lib/definitions";
 import Select from "./select";
 import FieldErrorMessage from "./field-error-message";
