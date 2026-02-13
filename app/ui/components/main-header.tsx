@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Bars3Icon } from "@heroicons/react/24/outline";
+import NabarvUserOptions from "./navbar-user-options";
+import { auth } from "@/auth";
 
 const navItems = [
     { href: "/products", label: "Browse" },
@@ -7,7 +9,8 @@ const navItems = [
     { href: "/profiles", label: "Discover" },
 ];
 
-export default function MainHeader() {
+export default async function MainHeader() {
+    const session = await auth()
     return (
         <header >
             <div className="mx-5 md:mx-10 max-w-5xl lg:mx-auto my-5 flex justify-between items-center">
@@ -27,9 +30,7 @@ export default function MainHeader() {
                             >{link.label}</Link>
                         ))}
                     </ul>
-                    <Link href="/login" className="bg-gray-900 text-white rounded-lg px-4 py-1.5 hover:bg-gray-800 cursor-pointer">
-                        Login
-                    </Link>
+                    <NabarvUserOptions user={session?.user || null} />
                 </nav>
             </div>
         </header>
