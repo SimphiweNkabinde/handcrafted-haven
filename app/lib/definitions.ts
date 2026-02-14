@@ -35,3 +35,24 @@ export type User = {
     email: string;
     password: string;
 }
+
+export type ProductReview = {
+    id: string;
+    product_id: string;
+    user_id: string;
+    title: string;
+    body: string;
+    rating: number;
+    created_at: string;
+}
+
+
+export type ProductReviewData = {
+    id: string;
+    product_id: string;
+    username: string
+    title: string;
+    body: string;
+    rating: number;
+    created_at: string;
+}

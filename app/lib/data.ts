@@ -1,5 +1,5 @@
 import postgres from "postgres"
-import { ProductData, ProductCategory } from "./definitions";
+import { ProductData, ProductCategory, ProductReviewData } from "./definitions";
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
 export async function fetchProducts() {
@@ -20,7 +20,7 @@ export async function fetchProducts() {
         return data
     } catch (error) {
         console.error('Database Error:', error);
-        throw new Error('Failed to fetch revenue data.');
+        throw new Error('Failed to fetch products.');
     }
 }
 
@@ -43,7 +43,7 @@ export async function fetchProductById(id: string) {
         return data[0]
     } catch (error) {
         console.error('Database Error:', error);
-        throw new Error('Failed to fetch revenue data.');
+        throw new Error('Failed to fetch product data.');
     }
 }
 
@@ -54,6 +54,27 @@ export async function fetchProductCategories() {
         return data
     } catch (error) {
         console.error('Database Error:', error);
-        throw new Error('Failed to fetch revenue data.');
+        throw new Error('Failed to fetch product categories');
+    }
+}
+
+export async function fetchReviewsByProductId(id: string) {
+    try {
+        const data = await sql<ProductReviewData[]>`
+            SELECT
+                product_reviews.id,
+                product_reviews.title,
+                product_reviews.body,
+                users.name AS username,
+                product_reviews.rating,
+                product_reviews.created_at
+            FROM product_reviews
+            JOIN users ON product_reviews.user_id = users.id
+            WHERE product_reviews.product_id = ${id}
+            `;
+        return data
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch product reviews.');
     }
 }

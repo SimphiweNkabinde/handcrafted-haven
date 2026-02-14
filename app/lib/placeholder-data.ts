@@ -1,4 +1,4 @@
-import { Product, ProductCategory } from "./definitions";
+import { Product, ProductCategory, ProductReview } from "./definitions";
 
 const productCategories: ProductCategory[] = [
   {
@@ -85,6 +85,16 @@ const users = [
   },
 ];
 
+const ProductReviews: Omit<ProductReview, 'id' | 'created_at'>[] = [
+  {
+    product_id: "3958dc9e-712f-4377-85e9-fec4b6a6442a",
+    user_id: "a0bd42a9-263e-496e-bf4b-f846ec5dd6e5",
+    title: "Great Product",
+    body: "This is a great high quality product. I recommend it! ",
+    rating: 4
+  }
+]
 
 
-export { products, productCategories, users }
+
+export { products, productCategories, users, ProductReviews }
