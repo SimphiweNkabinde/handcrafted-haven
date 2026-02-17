@@ -6,10 +6,11 @@ export default function SellerProfileHeader({ seller }: { seller: SellerProfile 
 
       <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-neutral-600">
         <span className="font-medium">
-          {seller.rating.toFixed(1)} ({seller.reviewsCount})
+         {Number(seller.rating ?? 0).toFixed(1)} ({seller.reviewsCount ?? 0})
         </span>
         <span className="text-neutral-300">|</span>
-        <span>{seller.salesCount} Sales</span>
+        <span>{seller.salesCount ?? 0} Sales</span>
+
         <span  className="text-neutral-300 ">|</span>
       </div>
     </div>

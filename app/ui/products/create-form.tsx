@@ -31,7 +31,18 @@ export default function CreateForm({ categories }: { categories: ProductCategory
                         <TextInput id="imageUrl" defaultValue={state.values?.imageUrl} onChange={(e) => setImgPreviewUrl(e.target.value)} name="imageUrl" />
                         <FieldErrorMessage errorId="image-error" errors={state.errors?.imageUrl} />
                     </div>
-                    <img src={imgPreviewUrl} className="rounded object-cover w-full" />
+                    {imgPreviewUrl ? (
+                        <img
+                            src={imgPreviewUrl}
+                            alt="Preview"
+                            className="rounded object-cover w-full"
+                        />
+                    ) : (
+                        <div className="rounded w-full aspect-square bg-neutral-100 grid place-items-center text-sm text-neutral-500">
+                            Image preview
+                        </div>
+                    )}
+
                 </div>
                 <div className="flex flex-col gap-5 md:flex-1">
                     <div className="flex flex-col gap-2">

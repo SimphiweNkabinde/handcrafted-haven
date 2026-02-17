@@ -1,74 +1,141 @@
-"use client"
+import { auth } from "@/auth";
+import postgres from "postgres";
+import SellerProfileClient from "@/app/ui/profile/SellerProfileClient";
 
-import { useState } from "react"
-import { mockSeller, mockProducts } from "@/app/lib/mock/seller"
-import SellerProfileHeader from "@/app/ui/profile/SellerProfileHeader"
-import SellerBio from "@/app/ui/profile/SellerBio"
-import SellerProductsGrid from "@/app/ui/profile/SellerProductsGrid"
-import Button from "@/app/ui/button"
-import SellerEditProfileForm from "@/app/ui/profile/SellerEditProfileForm"
+const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
-export default function Page() {
-  const SellerProfile = mockSeller
-  const ProductBySeller = mockProducts
+type SellerProfileDB = {
+  id: string;
+  username: string | null;
+  display_name: string | null;
+  bio: string | null;
+  avatar_url: string | null;
+  created_at: string | null;
+};
 
-  const [isEditing, setIsEditing] = useState(false)
+type ProductDB = {
+  id: string;
+  seller_id: string | null;
+  name: string;
+  short_description: string | null;
+  long_description: string | null;
+  price: number | null;
+  image_url: string | null;
+};
+
+function mapSellerToUI(s: SellerProfileDB) {
+  const avatar =
+    s.avatar_url && s.avatar_url.trim() !== ""
+      ? s.avatar_url
+      : "https://placehold.co/512x512/png?text=Seller";
+
+  return {
+    id: s.id,
+    username: s.username ?? "",
+    displayName: s.display_name ?? "Seller",
+    bio: s.bio ?? "",
+    avatarUrl: avatar,
+
+    rating: 0,
+    reviewsCount: 0,
+    salesCount: 0,
+  };
+}
+
+function mapProductsToUI(rows: ProductDB[]) {
+  return rows.map((p) => ({
+    id: p.id,
+    title: p.name,
+    description: p.short_description ?? p.long_description ?? "",
+    price: typeof p.price === "number" ? p.price : Number(p.price ?? 0),
+    imageUrl:
+      p.image_url && p.image_url.trim() !== ""
+        ? p.image_url
+        : "https://placehold.co/600x600/png?text=Item",
+    status: "active",
+  }));
+}
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id?: string }> | { id?: string };
+}) {
+  const session = await auth();
+  const viewerId = (session?.user as any)?.id as string | undefined;
+
+  const resolvedParams = await params;
+  const id = resolvedParams?.id;
+
+  if (!id) {
+    return (
+      <main className="mx-auto max-w-6xl px-6 py-10">
+        <h1 className="text-xl font-semibold">Missing seller id</h1>
+        <p className="mt-2 text-sm text-neutral-500">
+          La ruta debe ser /profiles/[id].
+        </p>
+      </main>
+    );
+  }
+
+  // 1) Intentar leer el seller profile
+  let sellerRows = await sql<SellerProfileDB[]>`
+    SELECT id, username, display_name, bio, avatar_url, created_at
+    FROM seller_profiles
+    WHERE id = ${id}
+    LIMIT 1
+  `;
+
+  // 2) Si no existe, lo creamos automáticamente
+  if (!sellerRows.length) {
+    const fallbackName = (session?.user as any)?.name ?? "Seller";
+
+    await sql`
+      INSERT INTO seller_profiles (id, username, display_name, bio, avatar_url)
+      VALUES (${id}, NULL, ${fallbackName}, '', '')
+      ON CONFLICT (id) DO NOTHING
+    `;
+
+    // Volver a leerlo
+    sellerRows = await sql<SellerProfileDB[]>`
+      SELECT id, username, display_name, bio, avatar_url, created_at
+      FROM seller_profiles
+      WHERE id = ${id}
+      LIMIT 1
+    `;
+  }
+
+  if (!sellerRows.length) {
+    return (
+      <main className="mx-auto max-w-6xl px-6 py-10">
+        <h1 className="text-xl font-semibold">
+          Seller profile could not be created
+        </h1>
+        <p className="mt-2 text-sm text-neutral-500">
+          Revisa permisos/constraints en la tabla seller_profiles.
+        </p>
+      </main>
+    );
+  }
+
+  // 3) Productos del seller
+  const productRows = await sql<ProductDB[]>`
+    SELECT id, seller_id, name, short_description, long_description, price, image_url
+    FROM products
+    WHERE seller_id = ${id}
+    ORDER BY id DESC
+    LIMIT 24
+  `;
+
+  const seller = mapSellerToUI(sellerRows[0]);
+  const products = mapProductsToUI(productRows ?? []);
+  const isOwner = !!viewerId && viewerId === id;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-10">
-      <h1 className="text-sm text-neutral-400">Artisan Profile</h1>
-
-      {/* Si está en modo edición, SOLO se ve el form */}
-      {isEditing ? (
-        <section className="mt-8 rounded-3xl bg-white p-8 shadow-lg ring-1 ring-black/5">
-          <div className="flex items-center justify-between gap-4">
-            <h2 className="text-xl font-semibold">Edit profile</h2>
-            <Button onClick={() => setIsEditing(false)}>Back</Button>
-          </div>
-
-          <div className="mt-6">
-            <SellerEditProfileForm initial={SellerProfile} />
-          </div>
-        </section>
-      ) : (
-        <>
-          <section
-            className="mt-8 grid gap-10 md:grid-cols-[1.15fr_0.85fr]
-            bg-gradient-to-br from-gray-50/80 to-gray-200/60
-            p-10 rounded-3xl shadow-lg backdrop-blur-sm"
-          >
-            {/* Left column */}
-            <div>
-              <SellerProfileHeader seller={SellerProfile} />
-              <div className="mt-6 max-w-xl">
-                <SellerBio bio={SellerProfile.bio} />
-              </div>
-
-              <div className="mt-6">
-                <Button onClick={() => setIsEditing(true)}>Edit profile</Button>
-              </div>
-            </div>
-
-            {/* Right column – Avatar */}
-            <div className="flex items-center justify-center md:justify-end">
-              <div className="h-64 w-64 overflow-hidden rounded-full bg-neutral-100 shadow-md ring-4 ring-white">
-                <img
-                  src={SellerProfile.avatarUrl}
-                  alt={SellerProfile.displayName}
-                  className="h-full w-full object-cover object-top"
-                />
-              </div>
-            </div>
-          </section>
-
-          <section className="mt-16">
-            <h2 className="text-lg font-semibold">Featured Items</h2>
-            <div className="mt-6">
-              <SellerProductsGrid products={ProductBySeller} />
-            </div>
-          </section>
-        </>
-      )}
-    </main>
-  )
+    <SellerProfileClient
+      seller={seller}
+      products={products}
+      isOwner={isOwner}
+    />
+  );
 }
