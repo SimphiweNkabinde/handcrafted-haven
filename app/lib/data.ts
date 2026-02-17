@@ -63,27 +63,31 @@ export async function fetchProductsPages(filters: Filters = {}) {
 }
 
 export async function fetchProductById(id: string) {
-    try {
-        const data = await sql<ProductData[]>`
-            SELECT
-                products.id,
-                products.name,
-                products.short_description,
-                products.long_description,
-                products.price,
-                products.image_url,
-                product_categories.id AS category_id,
-                product_categories.name AS category_name
-            FROM products
-            JOIN product_categories ON products.category_id = product_categories.id
-            WHERE products.id = ${id}
-            `;
-        return data[0]
-    } catch (error) {
-        console.error('Database Error:', error);
-        throw new Error('Failed to fetch product data.');
-    }
+  try {
+    const data = await sql<ProductData[]>`
+      SELECT
+        products.id,
+        products.name,
+        products.short_description,
+        products.long_description,
+        products.price,
+        products.image_url,
+        product_categories.id AS category_id,
+        product_categories.name AS category_name,
+        products.seller_id AS seller_id,
+        seller_profiles.display_name AS seller_name
+      FROM products
+      JOIN product_categories ON products.category_id = product_categories.id
+      LEFT JOIN seller_profiles ON products.seller_id = seller_profiles.id
+      WHERE products.id = ${id}
+    `;
+    return data[0];
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch product data.");
+  }
 }
+
 
 export async function fetchProductCategories() {
     try {
