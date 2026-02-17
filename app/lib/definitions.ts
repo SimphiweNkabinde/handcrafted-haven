@@ -8,6 +8,7 @@ export type Product = {
     price: number;
     image_url: string;
     category_id: string;
+    seller_id: string
 }
 
 export type ProductData = {
@@ -19,6 +20,8 @@ export type ProductData = {
     image_url: string;
     category_id: string;
     category_name: string;
+    seller_id: string;
+    seller_name: string;
 }
 
 
@@ -54,5 +57,15 @@ export type ProductReviewData = {
     title: string;
     body: string;
     rating: number;
+    created_at: string;
+    product_name: string
+}
+
+export type SellerProfile = {
+    id: string;
+    user_id: string;
+    display_name: string;
+    bio: string;
+    avatar_url: string;
     created_at: string;
 }

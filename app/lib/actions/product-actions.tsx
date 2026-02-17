@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import postgres from "postgres";
 import z from "zod";
+import { fetchCurrentSellerProfile } from "../data";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' })
 
@@ -42,12 +43,11 @@ export type ProductState = {
 }
 
 export async function createProduct(prevState: ProductState, formData: FormData) {
-  const session = await auth();
-  const sellerId = (session?.user as any)?.id as string | undefined;
+  const profile = await fetchCurrentSellerProfile()
 
-  if (!sellerId) {
+  if (!profile) {
     return {
-      message: "You must be logged in to create a product.",
+      message: "You must have a Seller Profile to create a product.",
     };
   }
 
@@ -96,7 +96,7 @@ export async function createProduct(prevState: ProductState, formData: FormData)
         ${price},
         ${imageUrl},
         ${categoryId},
-        ${sellerId}
+        ${profile.id}
       )
     `;
   } catch (error) {
@@ -106,9 +106,9 @@ export async function createProduct(prevState: ProductState, formData: FormData)
   }
 
   revalidatePath('/products');
-  revalidatePath(`/profiles/${sellerId}`);
+  revalidatePath(`/profile`);
 
-  redirect('/products');
+  redirect('/profile');
 }
 
 export async function updateProduct(id: string, prevState: ProductState, formData: FormData) {

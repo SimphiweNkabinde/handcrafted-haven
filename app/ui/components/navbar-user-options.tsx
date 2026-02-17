@@ -32,13 +32,6 @@ export default function NavbarUserOptions({ user }: { user: User | null }) {
             </div>
 
             <div className="text-sm flex flex-col my-2">
-              <Link
-                href={userId ? `/profiles/${userId}` : "/profiles"}
-                className="px-4 py-2 flex gap-1"
-              >
-                <UserIcon className="w-5" /> Profile
-              </Link>
-
               <form
                 className="px-4 py-2 text-red-500 flex gap-1 cursor-pointer"
                 action={async () => {
