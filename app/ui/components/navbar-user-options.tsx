@@ -6,8 +6,6 @@ import { User } from "next-auth";
 import ProfileBtn from "./profile-btn";
 
 export default function NavbarUserOptions({ user }: { user: User | null }) {
-  const userId = (user as any)?.id as string | undefined;
-
   return (
     <div>
       {!user ? (

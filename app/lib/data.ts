@@ -63,8 +63,8 @@ export async function fetchProductsPages(filters: Filters = {}) {
 }
 
 export async function fetchProductById(id: string) {
-  try {
-    const data = await sql<ProductData[]>`
+    try {
+        const data = await sql<ProductData[]>`
       SELECT
         products.id,
         products.name,
@@ -81,11 +81,11 @@ export async function fetchProductById(id: string) {
       LEFT JOIN seller_profiles ON products.seller_id = seller_profiles.id
       WHERE products.id = ${id}
     `;
-    return data[0];
-  } catch (error) {
-    console.error("Database Error:", error);
-    throw new Error("Failed to fetch product data.");
-  }
+        return data[0];
+    } catch (error) {
+        console.error("Database Error:", error);
+        throw new Error("Failed to fetch product data.");
+    }
 }
 
 
@@ -116,6 +116,7 @@ export async function fetchReviewsByProductId(id: string) {
             JOIN users ON product_reviews.user_id = users.id
             JOIN products ON product_reviews.product_id = products.id
             WHERE product_reviews.product_id = ${id}
+            ORDER BY product_reviews.created_at DESC
             `;
         return data
     } catch (error) {
@@ -281,5 +282,76 @@ export async function fetchTopReviews() {
     } catch (error) {
         console.error('Database Error:', error);
         throw new Error('Failed to fetch product reviews.');
+    }
+}
+
+export async function fetchUserCart() {
+    const session = await auth();
+    if (!session?.user?.email) return null;
+    try {
+
+    } catch (error) {
+
+    }
+}
+
+export async function fetchUserCartItemCount() {
+    const session = await auth();
+    if (!session?.user?.email) return 0;
+
+    try {
+        const user = await sql<SellerProfile[]>`SELECT id FROM users WHERE email = ${session.user.email}`
+        if (!user.length) {
+            return 0;
+        }
+        const data = await sql`
+        SELECT COUNT(*)
+        FROM cart_items
+        WHERE user_id = ${user[0].id}
+    `;
+        return Number(data[0].count);
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch total cart items');
+    }
+}
+
+type CartItemData = {
+    id: string;
+    product_id: string;
+    product_image_url: string;
+    product_name: string;
+    product_price: number;
+    product_category: string;
+    quantity: number;
+}
+export async function fetchUserCartItem() {
+    const session = await auth();
+    if (!session?.user?.email) return [];
+
+    try {
+        const user = await sql<SellerProfile[]>`SELECT id FROM users WHERE email = ${session.user.email}`
+        if (!user.length) {
+            return [];
+        }
+        const data = await sql<CartItemData[]>`
+        SELECT 
+            cart_items.id,
+            cart_items.product_id,
+            products.image_url AS product_image_url,
+            products.name AS product_name,
+            products.price AS product_price,
+            product_categories.name AS product_category,
+            cart_items.quantity
+        FROM cart_items
+        JOIN products ON cart_items.product_id = products.id
+        LEFT JOIN product_categories ON products.category_id = product_categories.id
+        WHERE user_id = ${user[0].id}
+        ORDER BY products.name
+    `;
+        return data;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch cart items');
     }
 }

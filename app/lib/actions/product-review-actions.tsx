@@ -1,4 +1,5 @@
 'use server';
+import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import postgres from "postgres";
 import z from "zod";
@@ -7,7 +8,6 @@ const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' })
 
 const ReviewFormSchema = z.object({
     productId: z.string(),
-    userEmail: z.string().nonempty(),
     title: z.string().nonempty('Missing title'),
     body: z.string().nonempty('Missing body'),
     rating: z.coerce.number()
@@ -19,7 +19,6 @@ const ReviewFormSchema = z.object({
 export type ReviewState = {
     errors?: {
         productId?: string[];
-        userEmail?: string[];
         title?: string[];
         body?: string[];
         rating?: string[];
@@ -32,9 +31,11 @@ export type ReviewState = {
 }
 
 export async function createReview(prevState: ReviewState | undefined, formData: FormData) {
+    const session = await auth()
+    if (!session?.user?.email) return { message: 'missing auth session', }
+
     const validatedFields = ReviewFormSchema.safeParse({
         productId: formData.get('productId'),
-        userEmail: formData.get('userEmail'),
         title: formData.get('title'),
         body: formData.get('body'),
         rating: formData.get('rating')
@@ -51,10 +52,10 @@ export async function createReview(prevState: ReviewState | undefined, formData:
         }
     }
 
-    const { productId, userEmail, title, body, rating } = validatedFields.data;
+    const { productId, title, body, rating } = validatedFields.data;
 
     try {
-        const user = await sql`SELECT id FROM users WHERE email = ${userEmail}`
+        const user = await sql`SELECT id FROM users WHERE email = ${session.user.email}`
         if (!user.length) {
             return { message: 'User does not exist' };
         }

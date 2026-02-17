@@ -3,7 +3,7 @@
 import { createReview, ReviewState } from "@/app/lib/actions/product-review-actions";
 import { useActionState, useState } from "react";
 
-export default function ProductReviewForm({ userEmail, productId }: { userEmail: string, productId: string }) {
+export default function ProductReviewForm({ productId }: { productId: string }) {
 
     const [showForm, setShowForm] = useState(false)
     const initialState: ReviewState = {
@@ -38,8 +38,6 @@ export default function ProductReviewForm({ userEmail, productId }: { userEmail:
                         <textarea id="body" name="body" defaultValue={state?.values?.body || ""} className="block border text-sm border-slate-200 rounded-md text-sm py-2 px-2.5 w-full bg-slate-50" placeholder="review details" />
                         <p className="text-xs text-red-500 mt-1 ms-1">{state?.errors?.body}</p>
                     </div>
-
-                    <input type="hidden" name="userEmail" defaultValue={userEmail} />
                     <input type="hidden" name="productId" defaultValue={productId} />
 
                     <p className="text-xs text-red-500 mt-1 ms-1">{state?.message}</p>
