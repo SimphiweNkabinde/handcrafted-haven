@@ -1,20 +1,7 @@
-"use client";
-
 import Link from "next/link";
+import postgres from "postgres";
 
-const featured = {
-  slug: "artisan-ceramic-bowl",
-  name: "Artisan Ceramic Bowl",
-  tagline: "Handcrafted with intention",
-  description:
-    "A small-batch piece shaped and finished by hand. Durable, functional, and made to be used every day — not just displayed.",
-  price: "€48",
-  rating: 5,
-  reviewsCount: 124,
-  badges: ["Small batch", "Handmade", "Limited run"],
-  image:
-    "https://img.daisyui.com/images/stock/photo-1559703248-dcaaec9fab78.webp",
-} as const;
+const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
 function Stars({ rating }: { rating: number }) {
   return (
@@ -28,14 +15,45 @@ function Stars({ rating }: { rating: number }) {
           ★
         </span>
       ))}
-      <span className="ml-2 text-xs text-neutral-500">
-        {featured.reviewsCount} reviews
-      </span>
     </div>
   );
 }
 
-export default function FeaturedProduct() {
+export default async function FeaturedProduct() {
+  // Producto con mayor rating
+  const rows = await sql<{
+    id: string;
+    name: string;
+    short_description: string | null;
+    price: number | null;
+    image_url: string | null;
+  }[]>`
+    SELECT id, name, short_description, price, image_url
+    FROM products
+    ORDER BY price DESC
+    LIMIT 1
+  `;
+
+  if (!rows.length) return null;
+
+  const product = rows[0];
+
+  const featured = {
+    slug: product.id,
+    name: product.name,
+    tagline: "Handcrafted with intention",
+    description: product.short_description ?? "",
+    price: `€${Number(product.price ?? 0).toFixed(2)}`,
+
+    rating: 5,
+    reviewsCount: 0,
+    badges: ["Handmade", "Featured"],
+    image:
+      product.image_url && product.image_url.trim() !== ""
+        ? product.image_url
+        : "https://placehold.co/600x400/png?text=Product",
+  };
+
   return (
     <section id="featured" className="w-full px-4 py-16 scroll-mt-24">
       <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
@@ -51,7 +69,6 @@ export default function FeaturedProduct() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-transparent" />
           </div>
 
-          {/* Badges */}
           <div className="absolute left-4 top-4 flex flex-wrap gap-2">
             {featured.badges.map((b) => (
               <span
@@ -89,26 +106,17 @@ export default function FeaturedProduct() {
             <span className="text-sm text-neutral-500">• Free returns</span>
           </div>
 
-          {/* CTA */}
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <Link
               href={`/products/${featured.slug}`}
-              className="
-                inline-flex items-center justify-center rounded-md
-                bg-neutral-900 px-5 py-3 text-sm font-semibold text-white
-                hover:bg-neutral-800 transition
-              "
+              className="inline-flex items-center justify-center rounded-md bg-neutral-900 px-5 py-3 text-sm font-semibold text-white hover:bg-neutral-800 transition"
             >
-              View product <span className="ml-2" aria-hidden>→</span>
+              View product →
             </Link>
 
             <Link
               href="/products"
-              className="
-                inline-flex items-center justify-center rounded-md
-                border border-neutral-200 bg-white px-5 py-3 text-sm font-semibold text-neutral-900
-                hover:bg-neutral-50 transition
-              "
+              className="inline-flex items-center justify-center rounded-md border border-neutral-200 bg-white px-5 py-3 text-sm font-semibold text-neutral-900 hover:bg-neutral-50 transition"
             >
               Browse all
             </Link>
