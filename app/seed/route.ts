@@ -130,14 +130,27 @@ async function seedSellerProfiles() {
     return insertedProfiles;
 }
 
+async function seedCartItems() {
+    await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+    await sql`
+        CREATE TABLE IF NOT EXISTS cart_items (
+            id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+            user_id UUID NOT NULL,
+            product_id UUID NOT NULL,
+            quantity SMALLINT NOT NULL DEFAULT 1
+        );
+    `;
+}
+
 export async function GET() {
     try {
         const result = await sql.begin((sql) => [
             // seedProductCategories(),
             // seedProducts(),
-            // seedUsers()
+            // seedUsers(),
             // seedProductReviews(),
-            // seedSellerProfiles()
+            // seedSellerProfiles(),
+            // seedCartItems()
         ]);
 
         return Response.json({ message: 'Database seeded successfully' })

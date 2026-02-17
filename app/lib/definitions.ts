@@ -69,3 +69,10 @@ export type SellerProfile = {
     avatar_url: string;
     created_at: string;
 }
+
+export type CartItem = {
+    id: string;
+    user_id: string;
+    product_id: string;
+    quantity: number;
+}

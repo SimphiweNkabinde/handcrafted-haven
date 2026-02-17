@@ -2,6 +2,9 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import NavbarUserOptions from "./navbar-user-options";
 import MobileMenu from "@/app/ui/mobile-menu";
+import NavbarShoppingCart from "./navbar-shopping-cart";
+import { Suspense } from "react";
+import { ShoppingCartIcon } from "@heroicons/react/16/solid";
 
 const navItems = [
   { href: "/products", label: "Browse" },
@@ -41,8 +44,15 @@ export default async function MainHeader() {
               </li>
             ))}
           </ul>
-
-          <NavbarUserOptions user={session?.user || null} />
+          <Suspense fallback={
+            <button className='flex gap-1 border border-gray-200 rounded bg-gray-50 px-2 py-1'>
+              ...
+            </button>}>
+            <NavbarUserOptions user={session?.user || null} />
+          </Suspense>
+          <Suspense fallback={<ShoppingCartIcon className="w-5 text-gray-800" />}>
+            <NavbarShoppingCart />
+          </Suspense>
 
         </nav>
       </div>

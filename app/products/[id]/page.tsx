@@ -14,6 +14,7 @@ import { auth } from "@/auth";
 import ProductReviewCard from "@/app/ui/products/product-review-card";
 import ProductReviewForm from "@/app/ui/products/product-review-form";
 import PageHeader from "@/app/ui/components/page-header";
+import { addToCart } from "@/app/lib/actions/cart-actions";
 
 export default async function page({ params }: PageProps<"/products/[id]">) {
     const { id } = await params;
@@ -44,7 +45,13 @@ export default async function page({ params }: PageProps<"/products/[id]">) {
 
                         <p className="text-gray-500">{product.short_description}</p>
                         <p className="text-lg">${product.price}</p>
-                        <Button className="primary">Add to cart</Button>
+                        <form action={async () => {
+                            "use server";
+                            await addToCart(product.id);
+                        }}
+                        >
+                            <Button className="primary w-full">Add to cart</Button>
+                        </form>
                         <p className="text-gray-600">
                             {product.long_description}
                         </p>
@@ -115,7 +122,7 @@ export default async function page({ params }: PageProps<"/products/[id]">) {
                     </div>
                     <section className="flex flex-col gap-3 md:grid md:grid-cols-2">
                         <div>
-                            {session?.user?.email && <ProductReviewForm productId={id} userEmail={session?.user?.email} />}
+                            {session && <ProductReviewForm productId={id} />}
                         </div>
                         <div className="flex flex-col gap-3">
                             {reviews.map(review => (
