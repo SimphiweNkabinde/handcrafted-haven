@@ -5,7 +5,7 @@ import MobileMenu from "@/app/ui/mobile-menu";
 
 const navItems = [
   { href: "/products", label: "Browse" },
-  { href: "/profile", label: "Sell" },
+  { href: "/profile", label: "My Profile" },
   { href: "/profiles", label: "Discover" },
 ];
 
