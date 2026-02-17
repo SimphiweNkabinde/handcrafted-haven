@@ -3,7 +3,6 @@ import type { SellerProfile, ProductBySeller } from "../sellers"
 export const mockSeller: SellerProfile = {
 
   id: "seller_1",
-  username: "john-doe",
   displayName: "John Doe",
   bio: `Hi, I’m the maker behind this small handmade shop. Every piece you see here is created with care, patience, and attention to detail. What started as a simple hobby slowly turned into a passion for creating meaningful, handcrafted products.
 

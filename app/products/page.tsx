@@ -4,6 +4,7 @@ import ProductCard from "../ui/products/product-card"
 import CategoryFilter from "../ui/products/category-filter"
 import ProductSearchInput from "../ui/products/product-search-input"
 import Pagination from "../ui/products/pagination"
+import PageHeader from "../ui/components/page-header"
 
 export default async function Page({ params, searchParams }: PageProps<'/products'>) {
     const filterParams = await searchParams
@@ -16,7 +17,8 @@ export default async function Page({ params, searchParams }: PageProps<'/product
 
     return (
         <>
-            <div className="py-10 flex flex-col sm:flex-row gap-3">
+            <PageHeader heading="Shop" intro="Shop through our vast collection of thoughtfully handcrafted products" />
+            <div className="pb-5 flex flex-col sm:flex-row gap-3">
                 <ProductSearchInput />
                 <CategoryFilter categories={categories} />
             </div>

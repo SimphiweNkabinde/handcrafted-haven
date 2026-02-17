@@ -3,7 +3,7 @@ import type { ProductBySeller } from "@/app/lib/sellers";
 
 export default function SellerProductsGrid({ products }: { products: ProductBySeller[] }) {
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-6 grid-cols-2 md:grid-cols-3">
       {products.map((p) => {
         const img =
           (p as any).imageUrl && String((p as any).imageUrl).trim() !== ""
@@ -29,8 +29,8 @@ export default function SellerProductsGrid({ products }: { products: ProductBySe
               </div>
 
               <div className="p-4">
-                <h3 className="font-semibold">{p.title}</h3>
-                <p className="mt-1 text-sm text-neutral-600">
+                <h3 className="font-semibold text-sm md:text-normal">{p.title}</h3>
+                <p className="mt-1 text-xs md:text-sm text-neutral-600">
                   {SLineClamp(p.description)}
                 </p>
                 <p className="mt-2 text-sm font-semibold">

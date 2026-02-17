@@ -23,7 +23,6 @@ export default function CreateForm({ categories }: { categories: ProductCategory
 
     return (
         <form action={formAction} className="flex flex-col gap-5">
-            <h1 className="text-3xl">Add a new product</h1>
             <div className="flex flex-col-reverse gap-5 sm:grid grid-cols-2 gap-10">
                 <div className="flex flex-col gap-3">
                     <FormLabel htmlFor="name">Image URL</FormLabel>
@@ -83,7 +82,7 @@ export default function CreateForm({ categories }: { categories: ProductCategory
                                 aria-describedby='customer-error'
                             >
                                 <option value="" disabled>
-                                    Select a customer
+                                    Select a category
                                 </option>
                                 {categories.map((category) => (
                                     <option key={category.id} value={category.id}>

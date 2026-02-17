@@ -1,42 +1,6 @@
-"use client";
-
-const reviews = [
-  {
-    name: "Emily R.",
-    location: "Dublin, IE",
-    rating: 5,
-    text: "You can feel the care in every detail. It doesn’t feel mass-produced at all — the craftsmanship really shows.",
-    product: "Handcrafted ceramic bowl",
-  },
-  {
-    name: "James L.",
-    location: "Cork, IE",
-    rating: 5,
-    text: "Beautifully made. The materials feel solid and intentional. I’ve been using it daily and it still looks perfect.",
-    product: "Small batch textile piece",
-  },
-  {
-    name: "Sofia M.",
-    location: "Galway, IE",
-    rating: 4,
-    text: "I loved knowing how it was made. It feels personal, like owning something with a story behind it.",
-    product: "Artisan home object",
-  },
-  {
-    name: "Hannah T.",
-    location: "London, UK",
-    rating: 5,
-    text: "The quality exceeded my expectations. You can tell it was made slowly and with real attention to detail.",
-    product: "Handcrafted wooden tray",
-  },
-  {
-    name: "Oliver K.",
-    location: "Brighton, UK",
-    rating: 4,
-    text: "I appreciate that no two pieces are exactly the same. It makes it feel truly unique.",
-    product: "One-of-a-kind ceramic piece",
-  },
-] as const;
+import { fetchTopReviews } from "@/app/lib/data";
+import { StarIcon } from "@heroicons/react/16/solid";
+import Link from "next/link";
 
 function Stars({ rating }: { rating: number }) {
   return (
@@ -44,18 +8,20 @@ function Stars({ rating }: { rating: number }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <span
           key={i}
-          className={`text-sm ${
-            i < rating ? "text-yellow-400" : "text-neutral-300"
-          }`}
+          className={`text-sm ${i < rating ? "text-yellow-400" : "text-neutral-300"
+            }`}
         >
-          ★
+          <StarIcon className="w-4" />
         </span>
       ))}
     </div>
   );
 }
 
-export default function ProductReviews() {
+export default async function ProductReviews() {
+
+  const reviews = await fetchTopReviews()
+
   return (
     <section className="w-full px-4 py-16">
       {/* Header */}
@@ -84,23 +50,21 @@ export default function ProductReviews() {
           >
             <Stars rating={review.rating} />
 
-            <p className="mt-4 text-sm leading-relaxed text-neutral-700">
-              “{review.text}”
+            <p className="mt-4 font-semibold text-sm leading-relaxed text-neutral-800">
+              {review.title}
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-neutral-700">
+              “{review.body}”
             </p>
 
             <div className="mt-6 flex items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold text-neutral-900">
-                  {review.name}
-                </p>
-                <p className="text-xs text-neutral-500">
-                  {review.location}
-                </p>
-              </div>
+              <p className="text-sm font-semibold text-neutral-900 capitalize">
+                {review.username}
+              </p>
 
-              <span className="text-xs text-neutral-500 text-right">
-                {review.product}
-              </span>
+              <Link href={`/products/${review.product_id}`} className="text-xs text-neutral-500 hover:text-blue-400 underline text-right">
+                {review.product_name}
+              </Link>
             </div>
           </article>
         ))}

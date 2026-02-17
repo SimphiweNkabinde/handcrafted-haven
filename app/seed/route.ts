@@ -1,5 +1,5 @@
 import postgres from "postgres";
-import { productCategories, ProductReviews, products, users } from "../lib/placeholder-data";
+import { productCategories, ProductReviews, products, sellerProfiles, users } from "../lib/placeholder-data";
 import bcrypt from 'bcrypt';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
@@ -105,13 +105,39 @@ async function seedProductReviews() {
     return insertedReviews;
 }
 
+async function seedSellerProfiles() {
+    await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+    await sql`
+        CREATE TABLE IF NOT EXISTS seller_profiles (
+            id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+            user_id UUID NOT NULL,
+            display_name VARCHAR(255) NOT NULL,
+            bio TEXT NOT NULL,
+            avatar_url TEXT NOT NULL,
+            created_at TIMESTAMPTZ DEFAULT NOW()
+        );
+    `;
+    const insertedProfiles = await Promise.all(
+        sellerProfiles.map(async (profile) => {
+            return sql`
+                INSERT INTO seller_profiles (user_id, display_name, bio, avatar_url)
+                VALUES (${profile.user_id}, ${profile.display_name}, ${profile.bio}, ${profile.avatar_url})
+                ON CONFLICT (id) DO NOTHING;
+            `;
+        }),
+    );
+
+    return insertedProfiles;
+}
+
 export async function GET() {
     try {
         const result = await sql.begin((sql) => [
             // seedProductCategories(),
             // seedProducts(),
             // seedUsers()
-            // seedProductReviews()
+            // seedProductReviews(),
+            // seedSellerProfiles()
         ]);
 
         return Response.json({ message: 'Database seeded successfully' })

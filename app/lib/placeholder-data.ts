@@ -1,4 +1,4 @@
-import { Product, ProductCategory, ProductReview } from "./definitions";
+import { Product, ProductCategory, ProductReview, SellerProfile } from "./definitions";
 
 const productCategories: ProductCategory[] = [
   {
@@ -28,6 +28,17 @@ const productCategories: ProductCategory[] = [
   }
 ];
 
+const sellerProfiles: SellerProfile[] = [
+  {
+    id: '3958dc9e-742f-4377-85e9-fec4b6a6442a',
+    user_id: '410544b2-4001-4271-9855-fec4b6a6442a',
+    display_name: "Artisan Man",
+    bio: "I love creating works of art with my hands",
+    avatar_url: "https://images.unsplash.com/photo-1702466333742-edf9f1472508",
+    created_at: "2026-02-16 23:35:05.570537+00"
+  }
+]
+
 const products: Product[] = [
   {
     id: "410544b2-4001-4271-9855-fec4b6a6442a",
@@ -36,7 +47,8 @@ const products: Product[] = [
     long_description: "This bowl is individually thrown on a potter's wheel using high-fire stoneware clay. It features a proprietary 'Midnight' reactive glaze that mimics the starry night sky, creating one-of-a-kind patterns on every piece. It is microwave and dishwasher safe.",
     price: 45.00,
     image_url: "",
-    category_id: productCategories[0].id
+    category_id: productCategories[0].id,
+    seller_id: "3958dc9e-742f-4377-85e9-fec4b6a6442a"
   },
   {
     id: "d6e15727-9fe1-4961-8c5b-ea44a9bd81aa",
@@ -45,7 +57,8 @@ const products: Product[] = [
     long_description: "Crafted from century-old barn wood, this end-grain board is designed to protect your knife edges while providing a sturdy surface for heavy prep work. Each board is seasoned with food-grade mineral oil and beeswax.",
     price: 78.00,
     image_url: "",
-    category_id: productCategories[0].id
+    category_id: productCategories[0].id,
+    seller_id: "3958dc9e-742f-4377-85e9-fec4b6a6442a"
   },
   {
     id: "3958dc9e-712f-4377-85e9-fec4b6a6442a",
@@ -54,7 +67,8 @@ const products: Product[] = [
     long_description: "Woven on traditional floor looms, this throw features a subtle herringbone pattern. The cotton is hand-dyed in small batches using fermented indigo leaves, resulting in a rich, living color that develops a beautiful patina over time.",
     price: 120.00,
     image_url: "",
-    category_id: productCategories[1].id
+    category_id: productCategories[1].id,
+    seller_id: "3958dc9e-742f-4377-85e9-fec4b6a6442a"
   },
   {
     id: "3958dc9e-742f-4377-85e9-fec4b6a6442a",
@@ -63,7 +77,8 @@ const products: Product[] = [
     long_description: "Bring warmth to any room with this solid copper sconce. The metal is hand-hammered into shape and then meticulously etched with intricate floral patterns. When lit, the etchings cast soft, artistic shadows across the wall.",
     price: 195.00,
     image_url: "",
-    category_id: productCategories[2].id
+    category_id: productCategories[2].id,
+    seller_id: "3958dc9e-742f-4377-85e9-fec4b6a6442a"
   },
   {
     id: "76d65c26-f784-44a2-ac19-586678f7c2f2",
@@ -72,7 +87,8 @@ const products: Product[] = [
     long_description: "Made from vegetable-tanned leather, every seam of this journal is hand-sewn using the traditional saddle-stitch technique. It includes 200 pages of acid-free, cream-toned paper perfect for fountain pens.",
     price: 62.00,
     image_url: "",
-    category_id: productCategories[4].id
+    category_id: productCategories[4].id,
+    seller_id: "3958dc9e-742f-4377-85e9-fec4b6a6442a"
   }
 ];
 
@@ -97,4 +113,4 @@ const ProductReviews: Omit<ProductReview, 'id' | 'created_at'>[] = [
 
 
 
-export { products, productCategories, users, ProductReviews }
+export { products, productCategories, users, ProductReviews, sellerProfiles }
